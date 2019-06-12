@@ -137,7 +137,6 @@ class Camera extends React.Component {
   }
 
   handleTakePhoto () {
-
     if (!this.state.isShowVideo) {
       this.setState({
         dataUri: '',
