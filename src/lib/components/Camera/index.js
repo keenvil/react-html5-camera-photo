@@ -137,6 +137,15 @@ class Camera extends React.Component {
   }
 
   handleTakePhoto () {
+
+    if (!this.state.isShowVideo) {
+      this.setState({
+        dataUri: '',
+        isShowVideo: true
+      });
+      return;
+    }
+
     const {sizeFactor, imageType, imageCompression, isImageMirror, isSilentMode} = this.props;
     const configDataUri = { sizeFactor, imageType, imageCompression, isImageMirror };
 
@@ -151,13 +160,6 @@ class Camera extends React.Component {
       dataUri,
       isShowVideo: false
     });
-
-    this.clearShowVideoTimeout();
-    this.showVideoTimeoutId = setTimeout(() => {
-      this.setState({
-        isShowVideo: true
-      });
-    }, 900);
   }
 
   render () {

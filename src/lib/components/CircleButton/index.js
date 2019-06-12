@@ -11,9 +11,7 @@ export const CircleButton = ({ onClick, isClicked }) => {
         id="outer-circle"
         onClick = {
           (e) => {
-            if (!isClicked) {
-              onClick();
-            }
+            onClick();
           }
         }
       >
