@@ -35,7 +35,8 @@
   "homepage": "https://mabelanger.github.io/react-html5-camera-photo/",
   "license": "MIT",
   "dependencies": {
-    "jslib-html5-camera-photo": "3.0.2-beta.0"
+    "jslib-html5-camera-photo": "3.0.2-beta.0",
+    "react-pose": "^4.0.8"
   },
   "publishConfig": {
     "registry": "http://nexus.int.myaws.io:8081/repository/keenvil-npm/"

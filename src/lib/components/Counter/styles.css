@@ -1,0 +1,19 @@
+.counter {
+  height: 50px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background-color: #EF5C4E;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.counter__step {
+  font-size: 30px;
+  color: #FFF;
+}
+
+.counter__step i {
+  font-size: 28px;
+}

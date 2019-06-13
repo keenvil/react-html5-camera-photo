@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 import LibCameraPhoto, { FACING_MODES, IMAGE_TYPES } from 'jslib-html5-camera-photo';
 
 import CircleButton from '../CircleButton';
-import WhiteFlash from '../WhiteFlash';
 import DisplayError from '../DisplayError';
+import Counter from '../Counter';
 
 import {getShowHideStyle,
   getVideoStyles,
@@ -30,10 +30,12 @@ class Camera extends React.Component {
       dataUri: '',
       isShowVideo: true,
       isCameraStarted: false,
-      startCameraErrorMsg: ''
+      startCameraErrorMsg: '',
+      showCounter: false
     };
     this.handleTakePhoto = this.handleTakePhoto.bind(this);
     this.clearShowVideoTimeout = this.clearShowVideoTimeout.bind(this);
+    this.onCounterEnd = this.onCounterEnd.bind(this);
   }
 
   componentDidMount () {
@@ -136,21 +138,17 @@ class Camera extends React.Component {
     });
   }
 
-  handleTakePhoto () {
-    if (!this.state.isShowVideo) {
-      this.setState({
-        dataUri: '',
-        isShowVideo: true
-      });
-      return;
+  onCounterEnd () {
+    this.setState({
+      showCounter: false
+    });
+
+    if (this.props.onBeforeTakePhoto) {
+      this.props.onBeforeTakePhoto();
     }
 
-    const {sizeFactor, imageType, imageCompression, isImageMirror, isSilentMode} = this.props;
+    const { sizeFactor, imageType, imageCompression, isImageMirror } = this.props;
     const configDataUri = { sizeFactor, imageType, imageCompression, isImageMirror };
-
-    if (!isSilentMode) {
-      playClickAudio();
-    }
 
     let dataUri = this.libCameraPhoto.getDataUri(configDataUri);
     this.props.onTakePhoto(dataUri);
@@ -161,11 +159,32 @@ class Camera extends React.Component {
     });
   }
 
+  handleTakePhoto () {
+    if (!this.state.isShowVideo) {
+      this.setState({
+        dataUri: '',
+        isShowVideo: true
+      });
+      return;
+    }
+
+    const { isSilentMode } = this.props;
+
+    if (!isSilentMode) {
+      playClickAudio();
+    }
+
+    this.setState({
+      showCounter: true
+    });
+  }
+
   render () {
-    const {isImageMirror, isDisplayStartCameraError, isFullscreen} = this.props;
+    const {isImageMirror, isDisplayStartCameraError, isFullscreen, counterStart} = this.props;
 
     let videoStyles = getVideoStyles(this.state.isShowVideo, isImageMirror);
     let showHideImgStyle = getShowHideStyle(!this.state.isShowVideo);
+    const shouldShowCounter = this.state.showCounter;
 
     let classNameFullscreen = isFullscreen ? 'react-html5-camera-photo-fullscreen' : '';
     return (
@@ -174,9 +193,6 @@ class Camera extends React.Component {
           cssClass={'display-error'}
           isDisplayError={isDisplayStartCameraError}
           errorMsg={this.state.startCameraErrorMsg}
-        />
-        <WhiteFlash
-          isShowWhiteFlash={!this.state.isShowVideo}
         />
         <img
           style={showHideImgStyle}
@@ -190,10 +206,19 @@ class Camera extends React.Component {
           muted="muted"
           playsInline
         />
-        <CircleButton
-          isClicked={!this.state.isShowVideo}
-          onClick={this.handleTakePhoto}
-        />
+        { !shouldShowCounter &&
+          <CircleButton
+            isClicked={!this.state.isShowVideo}
+            onClick={this.handleTakePhoto}
+          />
+        }
+        { shouldShowCounter &&
+          <Counter
+            onCounterEnd={this.onCounterEnd}
+            start={counterStart}
+            isVisible={shouldShowCounter}
+          />
+        }
       </div>
     );
   }
@@ -220,10 +245,13 @@ Camera.propTypes = {
   isFullscreen: PropTypes.bool,
   sizeFactor: PropTypes.number,
   onCameraStart: PropTypes.func,
-  onCameraStop: PropTypes.func
+  onCameraStop: PropTypes.func,
+  onBeforeTakePhoto: PropTypes.func,
+  counterStart: PropTypes.number
 };
 
 Camera.defaultProps = {
   isImageMirror: true,
-  isDisplayStartCameraError: true
+  isDisplayStartCameraError: true,
+  counterStart: 3
 };

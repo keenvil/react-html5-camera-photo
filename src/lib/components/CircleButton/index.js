@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './styles/circleButton.css';
 
 export const CircleButton = ({ onClick, isClicked }) => {
-  const innerCircleClasses = isClicked ? 'is-clicked' : '';
+  const innerCircleClasses = isClicked ? 'fa fa-times' : 'fa fa-camera';
   return (
     <div id="container-circles">
       <div
@@ -15,8 +15,7 @@ export const CircleButton = ({ onClick, isClicked }) => {
           }
         }
       >
-        <div id="inner-circle" className={innerCircleClasses}>
-        </div>
+        <i className={innerCircleClasses} aria-hidden="true" />
       </div>
     </div>
   );
