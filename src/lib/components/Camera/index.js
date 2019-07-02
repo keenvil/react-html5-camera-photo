@@ -32,7 +32,8 @@ class Camera extends React.Component {
       isShowVideo: true,
       isCameraStarted: false,
       startCameraErrorMsg: '',
-      showCounter: false
+      showCounter: false,
+      showFlash: false
     };
     this.handleTakePhoto = this.handleTakePhoto.bind(this);
     this.clearShowVideoTimeout = this.clearShowVideoTimeout.bind(this);
@@ -156,15 +157,24 @@ class Camera extends React.Component {
 
     this.setState({
       dataUri,
-      isShowVideo: false
+      isShowVideo: false,
+      showFlash: true
     });
+
+    this.clearShowVideoTimeout();
+    this.showVideoTimeoutId = setTimeout(() => {
+      this.setState({
+        showFlash: false
+      });
+    }, 500);
   }
 
   handleTakePhoto () {
     if (!this.state.isShowVideo) {
       this.setState({
         dataUri: '',
-        isShowVideo: true
+        isShowVideo: true,
+        showFlash: false
       });
       return;
     }
@@ -186,6 +196,7 @@ class Camera extends React.Component {
     let videoStyles = getVideoStyles(this.state.isShowVideo, isImageMirror);
     let showHideImgStyle = getShowHideStyle(!this.state.isShowVideo);
     const shouldShowCounter = this.state.showCounter;
+    const shouldShowFlash = this.state.showFlash;
 
     let classNameFullscreen = isFullscreen ? 'react-html5-camera-photo-fullscreen' : '';
     return (
@@ -196,7 +207,7 @@ class Camera extends React.Component {
           errorMsg={this.state.startCameraErrorMsg}
         />
         <WhiteFlash
-          isShowWhiteFlash={!this.state.isShowVideo}
+          isShowWhiteFlash={shouldShowFlash}
         />
         <img
           style={showHideImgStyle}
