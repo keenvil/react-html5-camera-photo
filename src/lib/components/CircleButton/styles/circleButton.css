@@ -1,7 +1,7 @@
 #container-circles {
   position: absolute;
   left: 50%;
-  bottom: 63px;
+  bottom: 75px;
 }
 
 #outer-circle {
@@ -14,7 +14,7 @@
   /*
     opacity of 0.4
   */
-  background-color: #EF5C4E;
+  background-color: #3324A7;
   border-radius: 50%;
 
   z-index: 1;

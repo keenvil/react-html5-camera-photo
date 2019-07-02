@@ -8,6 +8,7 @@ import LibCameraPhoto, { FACING_MODES, IMAGE_TYPES } from 'jslib-html5-camera-ph
 
 import CircleButton from '../CircleButton';
 import DisplayError from '../DisplayError';
+import WhiteFlash from '../WhiteFlash';
 import Counter from '../Counter';
 
 import {getShowHideStyle,
@@ -193,6 +194,9 @@ class Camera extends React.Component {
           cssClass={'display-error'}
           isDisplayError={isDisplayStartCameraError}
           errorMsg={this.state.startCameraErrorMsg}
+        />
+        <WhiteFlash
+          isShowWhiteFlash={!this.state.isShowVideo}
         />
         <img
           style={showHideImgStyle}
